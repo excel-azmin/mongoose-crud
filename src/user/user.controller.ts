@@ -6,20 +6,28 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
-@ApiTags('User')
+@ApiTags('User Detilas')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('profileImage'))
+  create(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile() profileImage: Express.Multer.File,
+  ) {
+    return this.userService.create(createUserDto, profileImage);
   }
 
   @Get()

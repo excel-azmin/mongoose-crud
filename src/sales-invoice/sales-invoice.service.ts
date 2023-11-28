@@ -30,7 +30,6 @@ export class SalesInvoiceService {
   }
 
   async findAllByUserId(id: string) {
-    console.log(id);
     const result = await this.salesInvoiceModel
       .find({ user: new Types.ObjectId(id) })
       .populate('user', 'fullName + email -_id')

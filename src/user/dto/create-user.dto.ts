@@ -18,4 +18,7 @@ export class CreateUserDto {
     description: 'The email address of the user.',
   })
   readonly email: string;
+
+  @ApiProperty({ type: 'string', format: 'binary' })
+  profileImage: Express.Multer.File; // File upload field
 }

@@ -12,6 +12,8 @@ export class User extends Document {
   fullName: string;
   @Prop({ isRequired: true })
   email: string;
+  @Prop({ type: String, default: null }) // This might store the path or filename of the uploaded image
+  profileImage: string;
   @Prop({ type: [{ type: Types.ObjectId, ref: 'SalesInvoice' }] }) // Array of SalesInvoice references
   salesInvoices: SalesInvoice[];
 }

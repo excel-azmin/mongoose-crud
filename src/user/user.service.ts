@@ -11,8 +11,13 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(
+    createUserDto: CreateUserDto,
+    profileImage: Express.Multer.File,
+  ): Promise<User> {
     const createUser = new this.userModel(createUserDto);
+    createUser.profileImage = profileImage.filename;
+
     return await createUser.save();
   }
 
