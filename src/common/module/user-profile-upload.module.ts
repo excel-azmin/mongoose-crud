@@ -8,12 +8,12 @@ import { uuid } from 'uuidv4';
   imports: [
     MulterModule.register({
       storage: diskStorage({
-        destination: './uploads',
+        destination: './uploads/user-profile/',
         filename: (req, file, cb) => {
           const uniqueSuffix = `${Date.now()}-${Math.round(
             Math.random() * 1e9,
           )}`;
-          cb(null, `${uuid()}-${uniqueSuffix}-${file.originalname}`);
+          cb(null, `${uuid()}-${uniqueSuffix}:${file.originalname}`);
         },
       }),
     }),

@@ -12,5 +12,6 @@ import { SalesInvoiceService } from './sales-invoice.service';
   ],
   controllers: [SalesInvoiceController],
   providers: [SalesInvoiceService],
+  exports: [SalesInvoiceService],
 })
 export class SalesInvoiceModule {}

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { SalesReportsList } from 'src/common/enum/enum-sales-reports';
 import { SortOptions } from 'src/common/enum/enum-sort-options';
 import { CreateSalesInvoiceDto } from './dto/create-sales-invoice.dto';
 import { UpdateSalesInvoiceDto } from './dto/update-sales-invoice.dto';
@@ -112,11 +113,53 @@ export class SalesInvoiceService {
     return `This action returns a #${id} salesInvoice`;
   }
 
+  getReport(reportType: string, startDate: Date, endDate: Date) {
+    switch (reportType) {
+      case SalesReportsList.TOTAL_SALES:
+        return this.calculateTotalSales(startDate, endDate);
+
+      // case SalesReportsList.TOP_SELLING_ITEMS_BY_QUANTITY:
+      //   return this.calculateTopSellingItemsByQuantity(startDate, endDate);
+
+      // case SalesReportsList.TOP_SELLING_ITEMS_BY_REVENUE:
+      //   return this.calculateTopSellingItemsByRevenue(startDate, endDate);
+
+      // case SalesReportsList.TOP_SELLING_ITEMS_BY_CUSTOMER:
+      //   return this.calculateTopSellingItemsByCustomer(startDate, endDate);
+
+      default:
+        throw new Error('Invalid report type');
+    }
+  }
+
   update(id: number, updateSalesInvoiceDto: UpdateSalesInvoiceDto) {
     return `This action updates a #${id} salesInvoice`;
   }
 
   remove(id: number) {
     return `This action removes a #${id} salesInvoice`;
+  }
+
+  async calculateTotalSales(startDate: Date, endDate: Date) {
+    // Logic to calculate total sales within the specified date range
+    // Example aggregation query:
+    const totalSales = await this.salesInvoiceModel.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalSalesAmount: { $sum: '$totalPrice' },
+        },
+      },
+    ]);
+
+    return totalSales;
   }
 }
