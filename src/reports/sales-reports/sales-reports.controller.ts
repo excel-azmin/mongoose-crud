@@ -19,13 +19,13 @@ export class SalesReportsController {
     name: 'startDate',
     type: Date,
     required: true,
-    example: '2023-11-01',
+    example: '2023-01-01',
   })
   @ApiQuery({
     name: 'endDate',
     type: Date,
     required: true,
-    example: '2023-11-30',
+    example: '2023-12-30',
   })
   getReport(
     @Query('endDate') endDate: Date,

@@ -169,4 +169,42 @@ export class SalesInvoiceService {
 
     return totalSales;
   }
+
+  async calculateTopSellingItemsByQuantity(
+    start: Date,
+    end: Date,
+    limit: number = 10,
+  ) {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const topSellingItemsByQuantity = await this.salesInvoiceModel.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalQuantity: { $sum: '$itemQty' },
+        },
+      },
+      {
+        $sort: {
+          totalQuantity: -1,
+        },
+      },
+      {
+        $limit: limit,
+      },
+    ]);
+
+    console.log(topSellingItemsByQuantity);
+
+    return topSellingItemsByQuantity;
+  }
 }
