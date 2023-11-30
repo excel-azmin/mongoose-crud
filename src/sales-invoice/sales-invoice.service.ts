@@ -140,9 +140,14 @@ export class SalesInvoiceService {
     return `This action removes a #${id} salesInvoice`;
   }
 
-  async calculateTotalSales(startDate: Date, endDate: Date) {
+  async calculateTotalSales(start: Date, end: Date) {
     // Logic to calculate total sales within the specified date range
     // Example aggregation query:
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    console.log(startDate, endDate);
     const totalSales = await this.salesInvoiceModel.aggregate([
       {
         $match: {
@@ -159,6 +164,8 @@ export class SalesInvoiceService {
         },
       },
     ]);
+
+    console.log(startDate, endDate, totalSales);
 
     return totalSales;
   }

@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, Param, Patch, Query } from '@nestjs/common';
 
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SalesReportsList } from 'src/common/enum/enum-sales-reports';
 import { SalesReportsService } from './sales-reports.service';
 
@@ -8,22 +8,29 @@ import { SalesReportsService } from './sales-reports.service';
 @ApiTags('Sales Reports')
 export class SalesReportsController {
   constructor(private readonly salesReportsService: SalesReportsService) {}
+
   @Get()
-  @ApiOperation({
-    summary: 'Get Sales Report',
-    description: 'Get sales report details',
-  })
   @ApiQuery({
     name: 'reportType',
     enum: SalesReportsList,
     required: true,
   })
-  @ApiQuery({ name: 'Start Date', type: Date, required: true })
-  @ApiQuery({ name: 'End Date', type: Date, required: true })
+  @ApiQuery({
+    name: 'startDate',
+    type: Date,
+    required: true,
+    example: '2023-11-01',
+  })
+  @ApiQuery({
+    name: 'endDate',
+    type: Date,
+    required: true,
+    example: '2023-11-30',
+  })
   getReport(
-    @Query('reportType') reportType: string,
-    @Query('startDate') startDate: Date,
     @Query('endDate') endDate: Date,
+    @Query('startDate') startDate: Date,
+    @Query('reportType') reportType: string,
   ) {
     return this.salesReportsService.getReport(reportType, startDate, endDate);
   }
