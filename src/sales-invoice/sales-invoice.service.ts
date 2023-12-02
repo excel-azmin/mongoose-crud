@@ -117,9 +117,8 @@ export class SalesInvoiceService {
     switch (reportType) {
       case SalesReportsList.TOTAL_SALES:
         return this.calculateTotalSales(startDate, endDate);
-
-      // case SalesReportsList.TOP_SELLING_ITEMS_BY_QUANTITY:
-      //   return this.calculateTopSellingItemsByQuantity(startDate, endDate);
+      case SalesReportsList.TOP_SELLING_ITEMS_BY_QUANTITY:
+        return this.calculateTopSellingItemsByQuantity(startDate, endDate);
 
       // case SalesReportsList.TOP_SELLING_ITEMS_BY_REVENUE:
       //   return this.calculateTopSellingItemsByRevenue(startDate, endDate);
@@ -189,8 +188,12 @@ export class SalesInvoiceService {
       },
       {
         $group: {
-          _id: null,
+          _id: {
+            itemName: '$itemName',
+            customer: '$customer',
+          },
           totalQuantity: { $sum: '$itemQty' },
+          totalPrice: { $sum: '$totalPrice' },
         },
       },
       {
@@ -198,9 +201,9 @@ export class SalesInvoiceService {
           totalQuantity: -1,
         },
       },
-      {
-        $limit: limit,
-      },
+      // {
+      //   $limit: limit,
+      // },
     ]);
 
     console.log(topSellingItemsByQuantity);
